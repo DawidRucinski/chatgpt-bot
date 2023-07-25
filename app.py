@@ -60,7 +60,7 @@ def generate_image():
     print("Generate Image Endpoint Called")
     graph_code = request.json['graph_code']
     s = Source(graph_code, format="png")
-
+    print(graph_code)
     img_data = s.pipe()
     return jsonify({'image_data': base64.b64encode(img_data).decode('utf-8')})
 
