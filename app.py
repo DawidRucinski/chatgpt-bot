@@ -1,30 +1,23 @@
 import base64
-
 from dotenv import load_dotenv
 from flask import Flask, render_template, jsonify, request
-import config
-import openai
 import aiapi
-import tempfile
-import openai
 import config
-from flask import Flask, jsonify, request, send_file
-from io import BytesIO
 from graphviz import Source
 import openai
+import re
+
 openai.api_key = config.DevelopmentConfig.OPENAI_KEY
 
 
-import re
 
 def remove_html_tags(text):
     clean = re.compile('<.*?>')
     return re.sub(clean, '', text)
 
 
-
 def page_not_found(e):
-  return render_template('404.html'), 404
+    return render_template('404.html'), 404
 
 
 app = Flask(__name__)
@@ -33,7 +26,7 @@ app.config.from_object(config.config['development'])
 app.register_error_handler(404, page_not_found)
 
 
-@app.route('/', methods = ['POST', 'GET'])
+@app.route('/', methods=['POST', 'GET'])
 def index():
     if request.method == 'POST':
         prompt = request.json['prompt']
@@ -63,6 +56,7 @@ def generate_image():
     print(graph_code)
     img_data = s.pipe()
     return jsonify({'image_data': base64.b64encode(img_data).decode('utf-8')})
+
 
 if __name__ == '__main__':
     load_dotenv()

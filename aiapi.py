@@ -1,10 +1,6 @@
-import base64
-
-import openai
 import config
-from flask import Flask, jsonify, request, send_file
-from io import BytesIO
-from graphviz import Source
+from flask import Flask, jsonify, request
+
 import openai
 openai.api_key = config.DevelopmentConfig.OPENAI_KEY
 
