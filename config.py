@@ -4,7 +4,7 @@ class Config(object):
     TESTING = False
 
 class DevelopmentConfig(Config):
-    SECRET_KEY = "test"
+    SECRET_KEY = "this-is-a-super-secret-key"
     OPENAI_KEY = 'provide-your-openai-key'
 
 config = {
