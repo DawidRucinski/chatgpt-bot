@@ -9,6 +9,31 @@ import re
 
 openai.api_key = config.DevelopmentConfig.OPENAI_KEY
 
+import nltk
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+from nltk.stem import WordNetLemmatizer
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('wordnet')
+
+import os
+from nltk.tag import StanfordNERTagger
+from nltk.tokenize import word_tokenize
+
+# Path to the Stanford NER JAR file
+stanford_ner_jar = os.getenv('NER_JAR')
+
+# Path to the Stanford NER model file
+stanford_ner_model = os.getenv('NER_MODEL')
+
+# Initialize the Stanford NER tagger
+ner_tagger = StanfordNERTagger(stanford_ner_model, stanford_ner_jar)
+
 
 
 def remove_html_tags(text):
@@ -18,6 +43,22 @@ def remove_html_tags(text):
 
 def page_not_found(e):
     return render_template('404.html'), 404
+
+
+def is_law_related(text):
+    # Tokenize the input text
+    words = word_tokenize(text)
+
+    # Perform NER using the Stanford NER tagger
+    entities = ner_tagger.tag(words)
+
+    # Check if any entities are classified as law-related
+    law_related_labels = ["ORGANIZATION", "LAW"]  # You can add more labels based on your specific needs
+    for word, label in entities:
+        if label in law_related_labels:
+            return True
+
+    return False
 
 
 app = Flask(__name__)
@@ -56,6 +97,26 @@ def generate_image():
     print(graph_code)
     img_data = s.pipe()
     return jsonify({'image_data': base64.b64encode(img_data).decode('utf-8')})
+
+
+def preprocess_prompt(prompt):
+    # Tokenization
+    tokens = word_tokenize(prompt)
+
+    # Lowercasing
+    tokens = [token.lower() for token in tokens]
+
+    # Remove stopwords and punctuation
+    stop_words = set(stopwords.words('english'))
+    tokens = [token for token in tokens if token.isalnum() and token not in stop_words]
+
+    # Lemmatization
+    lemmatizer = WordNetLemmatizer()
+    tokens = [lemmatizer.lemmatize(token) for token in tokens]
+
+    # Join tokens back into a sentence
+    preprocessed_prompt = ' '.join(tokens)
+    return preprocessed_prompt
 
 
 if __name__ == '__main__':

@@ -2,6 +2,9 @@ import config
 from flask import Flask, jsonify, request
 
 import openai
+
+from app import preprocess_prompt
+
 openai.api_key = config.DevelopmentConfig.OPENAI_KEY
 
 
@@ -18,8 +21,9 @@ def get_response(prompt, **kwargs):
     if not conversation_history:
         conversation_history.append(
             {"role": "system", "content": "You are an assistant directed towards simplifying legal issues to people"})
+    preprocessed_prompt = preprocess_prompt(prompt)  # Assuming you have implemented the preprocess_prompt function.
+    conversation_history.append({"role": "user", "content": preprocessed_prompt})
 
-    conversation_history.append({"role": "user", "content": prompt})
 
     response = openai.ChatCompletion.create(model=model, messages=conversation_history)
 
