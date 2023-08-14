@@ -20,7 +20,7 @@ def get_response(prompt, **kwargs):
 
     if not conversation_history:
         conversation_history.append(
-            {"role": "system", "content": "You are an assistant directed towards simplifying legal issues to people"})
+            {"role": "system", "content": "You are an assistant directed towards simplifying legal issues to people. Your role is to give unbiased, balanced, reliable and sustainable directions aimed towards explaining complicated issues. When you are asked to provide any code for visualisations, do use GRAPHWIZ DOT code. If there is a significant probability of misleading the user, ask for more information and warn the user that the information may be inaccurate. Always stay polite and do not advise anything that might be illegal. Follow the requests given by the user."})
     preprocessed_prompt = preprocess_prompt(prompt)  # Assuming you have implemented the preprocess_prompt function.
     conversation_history.append({"role": "user", "content": preprocessed_prompt})
 
