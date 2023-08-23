@@ -35,7 +35,6 @@ stanford_ner_model = os.getenv('NER_MODEL')
 ner_tagger = StanfordNERTagger(stanford_ner_model, stanford_ner_jar)
 
 
-
 def remove_html_tags(text):
     clean = re.compile('<.*?>')
     return re.sub(clean, '', text)
